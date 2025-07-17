@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authors - AI搭載著者プロモーションプラットフォーム</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .lesson-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+        
+        .email-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 4px solid #764ba2;
+        }
+        
+        .sns-platform {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .script-section {
+            background: #f8f9ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        
+        .timeline-item {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        
+        .keyword-tag {
+            background: #e8f5e8;
+            color: #28a745;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        
+        .target-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .strategy-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .strategy-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .duration-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .download-area {
+            background: #f8f9ff;
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-5xl font-bold text-white mb-4">
+                <i class="fas fa-book-open mr-3"></i>Authors
+            </h1>
+            <p class="text-xl text-white opacity-90">AI搭載著者プロモーションプラットフォーム</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="bg-white rounded-3xl p-8 mb-8 card-shadow">
+            <div class="upload-area border-dashed border-4 border-blue-400 rounded-2xl p-12 text-center cursor-pointer" id="uploadArea">
+                <div class="text-6xl text-blue-500 mb-4">
+                    <i class="fas fa-file-upload"></i>
+                </div>
+                <div class="text-2xl font-semibold text-gray-700 mb-4">ビジネス書の原稿をアップロードしてください</div>
+                <div class="text-gray-500">対応形式: PDF, Word (.docx), テキストファイル (.txt)</div>
+                <input type="file" id="fileInput" accept=".pdf,.docx,.txt" class="hidden" />
+            </div>
+            <button class="btn-primary text-white px-8 py-3 rounded-full text-lg font-semibold mt-6 hidden" id="analyzeBtn">
+                <i class="fas fa-robot mr-2"></i>AI分析を開始
+            </button>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mt-4 hidden" id="fileInfo"></div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4 hidden" id="errorMessage"></div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="bg-white rounded-3xl p-8 mb-8 card-shadow hidden" id="progressSection">
+            <div class="loading-spinner mx-auto mb-6"></div>
+            <div class="w-full bg-gray-200 rounded-full h-6 mb-6">
+                <div class="progress-bar h-6 rounded-full transition-all duration-500" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="text-center text-lg text-gray-700" id="progressText">原稿を分析中...</div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="bg-white rounded-3xl p-8 card-shadow hidden" id="resultsSection">
+            <!-- Tabs -->
+            <div class="flex flex-wrap border-b-2 border-gray-200 mb-8">
+                <div class="tab px-6 py-3 cursor-pointer font-semibold text-gray-600 hover:text-blue-600 transition-colors tab-active" data-tab="analysis">
+                    <i class="fas fa-chart-line mr-2"></i>分析結果
+                </div>
+                <div class="tab px-6 py-3 cursor-pointer font-semibold text-gray-600 hover:text-blue-600 transition-colors" data-tab="promotion">
+                    <i class="fas fa-rocket mr-2"></i>プロモーション戦略
+                </div>
+                <div class="tab px-6 py-3 cursor-pointer font-semibold text-gray-600 hover:text-blue-600 transition-colors" data-tab="course">
+                    <i class="fas fa-graduation-cap mr-2"></i>オンラインスクール
+                </div>
+                <div class="tab px-6 py-3 cursor-pointer font-semibold text-gray-600 hover:text-blue-600 transition-colors" data-tab="email">
+                    <i class="fas fa-envelope mr-2"></i>メールプロモーション
+                </div>
+            </div>
+
+            <!-- Analysis Tab -->
+            <div class="tab-content" id="analysis">
+                <div class="space-y-6">
+                    <div class="bg-blue-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                        <h3 class="text-xl font-semibold text-blue-700 mb-4">
+                            <i class="fas fa-users mr-2"></i>ターゲット読者分析
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="targetAudience">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-500">
+                        <h3 class="text-xl font-semibold text-green-700 mb-4">
+                            <i class="fas fa-tags mr-2"></i>ジャンル・キーワード分析
+                        </h3>
+                        <div id="genreAnalysis">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-2xl p-6 border-l-4 border-purple-500">
+                        <h3 class="text-xl font-semibold text-purple-700 mb-4">
+                            <i class="fas fa-pen-nib mr-2"></i>文体・トーン分析
+                        </h3>
+                        <div id="toneAnalysis">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotion Tab -->
+            <div class="tab-content hidden" id="promotion">
+                <div class="space-y-6">
+                    <div class="bg-blue-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                        <h3 class="text-xl font-semibold text-blue-700 mb-4">
+                            <i class="fas fa-share-alt mr-2"></i>SNS戦略
+                        </h3>
+                        <div id="snsStrategy">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-500">
+                        <h3 class="text-xl font-semibold text-green-700 mb-4">
+                            <i class="fas fa-newspaper mr-2"></i>PR・メディア戦略
+                        </h3>
+                        <div id="prStrategy">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 rounded-2xl p-6 border-l-4 border-yellow-500">
+                        <h3 class="text-xl font-semibold text-yellow-700 mb-4">
+                            <i class="fas fa-bullhorn mr-2"></i>広告・マーケティング
+                        </h3>
+                        <div id="adStrategy">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-2xl p-6 border-l-4 border-purple-500">
+                        <h3 class="text-xl font-semibold text-purple-700 mb-4">
+                            <i class="fas fa-calendar-alt mr-2"></i>イベント・キャンペーン
+                        </h3>
+                        <div id="eventStrategy">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Tab -->
+            <div class="tab-content hidden" id="course">
+                <div class="space-y-6">
+                    <div class="bg-blue-50 rounded-2xl p-6 border-l-4 border-blue-500">
+                        <h3 class="text-xl font-semibold text-blue-700 mb-4">
+                            <i class="fas fa-graduation-cap mr-2"></i>オンラインスクール構成（5分×30レッスン）
+                        </h3>
+                        <div id="courseStructure">
+                            <!-- 動的に生成される -->
+                        </div>
+                        <div class="download-area">
+                            <div class="text-lg font-semibold text-blue-700 mb-2">
+                                <i class="fas fa-download mr-2"></i>講座スライドをダウンロード
+                            </div>
+                            <p class="text-gray-600 mb-4">全30レッスンのスライドを一括ダウンロードできます</p>
+                            <button class="btn-secondary text-white px-6 py-3 rounded-full font-semibold hover-lift" id="downloadSlidesBtn">
+                                <i class="fas fa-file-powerpoint mr-2"></i>スライドをダウンロード
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 rounded-2xl p-6 border-l-4 border-green-500">
+                        <h3 class="text-xl font-semibold text-green-700 mb-4">
+                            <i class="fas fa-dollar-sign mr-2"></i>価格設定・ビジネスモデル
+                        </h3>
+                        <div id="pricingStrategy">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Tab -->
+            <div class="tab-content hidden" id="email">
+                <div class="space-y-6">
+                    <div class="bg-purple-50 rounded-2xl p-6 border-l-4 border-purple-500">
+                        <h3 class="text-xl font-semibold text-purple-700 mb-4">
+                            <i class="fas fa-envelope mr-2"></i>オンラインスクール販売用ステップメール
+                        </h3>
+                        <div id="emailSequence">
+                            <!-- 動的に生成される -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <div class="text-center mt-8">
+                <button class="btn-secondary text-white px-8 py-3 rounded-full text-lg font-semibold hover-lift" id="downloadBtn">
+                    <i class="fas fa-download mr-2"></i>分析結果をダウンロード
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AuthorsAnalyzer {
+            constructor() {
+                this.uploadedFile = null;
+                this.analysisResults = null;
+                this.snsPostCounts = {
+                    x: 0,
+                    instagram: 0,
+                    facebook: 0
+                };
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('fileInput');
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                const downloadBtn = document.getElementById('downloadBtn');
+                const downloadSlidesBtn = document.getElementById('downloadSlidesBtn');
+
+                // ファイルアップロード関連
+                uploadArea.addEventListener('click', () => fileInput.click());
+                uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));
+                uploadArea.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                uploadArea.addEventListener('drop', this.handleDrop.bind(this));
+                fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+
+                // 分析開始
+                analyzeBtn.addEventListener('click', this.startAnalysis.bind(this));
+
+                // タブ切り替え
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', this.switchTab.bind(this));
+                });
+
+                // ダウンロード
+                downloadBtn.addEventListener('click', this.downloadResults.bind(this));
+                downloadSlidesBtn.addEventListener('click', this.downloadSlides.bind(this));
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                document.getElementById('uploadArea').classList.add('dragover');
+            }
+
+            handleDragLeave(e) {
+                e.preventDefault();
+                document.getElementById('uploadArea').classList.remove('dragover');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                document.getElementById('uploadArea').classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.processFile(files[0]);
+                }
+            }
+
+            handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    this.processFile(file);
+                }
+            }
+
+            processFile(file) {
+                const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+                if (!allowedTypes.includes(file.type)) {
+                    this.showError('対応していないファイル形式です。PDF、Word、またはテキストファイルをアップロードしてください。');
+                    return;
+                }
+
+                if (file.size > 10 * 1024 * 1024) {
+                    this.showError('ファイルサイズが大きすぎます。10MB以下のファイルをアップロードしてください。');
+                    return;
+                }
+
+                this.uploadedFile = file;
+                this.showFileInfo(file);
+                document.getElementById('analyzeBtn').classList.remove('hidden');
+                this.hideError();
+            }
+
+            showFileInfo(file) {
+                const fileInfo = document.getElementById('fileInfo');
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                        <div>
+                            <div class="font-semibold">アップロード完了</div>
+                            <div class="text-sm">ファイル名: ${file.name} | サイズ: ${fileSize} MB</div>
+                        </div>
+                    </div>
+                `;
+                fileInfo.classList.remove('hidden');
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+                        <div>${message}</div>
+                    </div>
+                `;
+                errorDiv.classList.remove('hidden');
+            }
+
+            hideError() {
+                document.getElementById('errorMessage').classList.add('hidden');
+            }
+
+            async startAnalysis() {
+                if (!this.uploadedFile) {
+                    this.showError('ファイルをアップロードしてください。');
+                    return;
+                }
+
+                document.getElementById('progressSection').classList.remove('hidden');
+                document.getElementById('analyzeBtn').disabled = true;
+
+                try {
+                    const fileContent = await this.readFile(this.uploadedFile);
+                    await this.performAnalysis(fileContent);
+                    this.displayResults();
+                } catch (error) {
+                    console.error('分析エラー:', error);
+                    this.showError('分析中にエラーが発生しました。もう一度お試しください。');
+                } finally {
+                    document.getElementById('progressSection').classList.add('hidden');
+                    document.getElementById('analyzeBtn').disabled = false;
+                }
+            }
+
+            async readFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = (e) => reject(e);
+                    reader.readAsText(file);
+                });
+            }
+
+            async performAnalysis(content) {
+                const steps = [
+                    { text: '原稿を読み込み中...', progress: 20 },
+                    { text: 'テキスト解析中...', progress: 40 },
+                    { text: 'ターゲット分析中...', progress: 60 },
+                    { text: 'プロモーション戦略生成中...', progress: 80 },
+                    { text: 'カリキュラム設計中...', progress: 100 }
+                ];
+
+                for (const step of steps) {
+                    await this.updateProgress(step.text, step.progress);
+                    await this.delay(1000);
+                }
+
+                this.analysisResults = this.analyzeContent(content);
+            }
+
+            analyzeContent(content) {
+                const wordCount = content.split(' ').length;
+                const sentences = content.split('.').length;
+                const keywords = this.extractKeywords(content);
+                const tone = this.analyzeTone(content);
+                const genre = this.determineGenre(content);
+
+                return {
+                    basic: { wordCount, sentences, keywords, tone, genre },
+                    targetAudience: this.generateTargetAudience(content, keywords),
+                    promotionStrategy: this.generatePromotionStrategy(content, keywords, genre),
+                    courseStructure: this.generateCourseStructure(content, keywords, genre),
+                    emailSequence: this.generateEmailSequence(content, keywords, genre)
+                };
+            }
+
+            extractKeywords(content) {
+                const businessKeywords = [
+                    'マネジメント', '経営', 'リーダーシップ', 'マーケティング', '戦略',
+                    'イノベーション', 'DX', 'デジタル変革', '組織', 'チーム',
+                    '生産性', '効率', '成果', '目標', 'KPI', 'ROI',
+                    '起業', 'スタートアップ', 'ビジネスモデル', '収益',
+                    'コミュニケーション', 'プレゼン', '交渉', '営業'
+                ];
+
+                const foundKeywords = businessKeywords.filter(keyword => 
+                    content.toLowerCase().includes(keyword.toLowerCase())
+                );
+
+                return foundKeywords.slice(0, 8);
+            }
+
+            analyzeTone(content) {
+                const formalWords = ['である', 'ます', 'です', '致します'];
+                const casualWords = ['だよ', 'だね', 'じゃん', 'って'];
+                
+                const formalCount = formalWords.reduce((count, word) => 
+                    count + (content.match(new RegExp(word, 'g')) || []).length, 0);
+                const casualCount = casualWords.reduce((count, word) => 
+                    count + (content.match(new RegExp(word, 'g')) || []).length, 0);
+
+                if (formalCount > casualCount) {
+                    return { type: 'フォーマル', description: '丁寧で専門的な文体' };
+                } else {
+                    return { type: 'カジュアル', description: '親しみやすく読みやすい文体' };
+                }
+            }
+
+            determineGenre(content) {
+                const genres = {
+                    'マネジメント': ['管理', '経営', 'リーダー', 'マネジメント'],
+                    'マーケティング': ['マーケティング', '広告', 'ブランド', '顧客'],
+                    '起業・スタートアップ': ['起業', 'スタートアップ', 'ベンチャー', '創業'],
+                    '自己啓発': ['成功', '習慣', '目標', '成長', '自己啓発'],
+                    'DX・テクノロジー': ['DX', 'デジタル', 'AI', 'テクノロジー', 'IT']
+                };
+
+                let maxScore = 0;
+                let detectedGenre = 'ビジネス一般';
+
+                for (const [genre, keywords] of Object.entries(genres)) {
+                    const score = keywords.reduce((count, keyword) => 
+                        count + (content.toLowerCase().includes(keyword.toLowerCase()) ? 1 : 0), 0);
+                    
+                    if (score > maxScore) {
+                        maxScore = score;
+                        detectedGenre = genre;
+                    }
+                }
+
+                return detectedGenre;
+            }
+
+            generateTargetAudience(content, keywords) {
+                return [
+                    {
+                        title: '経営者・管理職',
+                        description: '企業の意思決定に関わる立場の方',
+                        demographics: '30-50代、年収800万円以上',
+                        interests: ['組織運営', '戦略立案', 'リーダーシップ'],
+                        channels: ['LinkedIn', 'NewsPicks', '日経新聞']
+                    },
+                    {
+                        title: '中堅ビジネスパーソン',
+                        description: 'キャリアアップを目指す会社員',
+                        demographics: '25-40代、年収400-800万円',
+                        interests: ['スキルアップ', '昇進', '転職'],
+                        channels: ['X(Twitter)', 'note', 'ビジネス雑誌']
+                    },
+                    {
+                        title: '起業家・フリーランス',
+                        description: '独立して事業を行っている方',
+                        demographics: '20-40代、収入変動あり',
+                        interests: ['事業拡大', 'ネットワーキング', '新規事業'],
+                        channels: ['Facebook', 'Instagram', 'YouTube']
+                    }
+                ];
+            }
+
+            generatePromotionStrategy(content, keywords, genre) {
+                return {
+                    sns: {
+                        x: this.generateSNSPosts('x', genre, keywords),
+                        instagram: this.generateSNSPosts('instagram', genre, keywords),
+                        facebook: this.generateSNSPosts('facebook', genre, keywords)
+                    },
+                    pr: {
+                        pressRelease: `${genre}分野の専門家による実践的ビジネス書発売`,
+                        mediaTargets: ['日経新聞', 'ダイヤモンド', '東洋経済', 'プレジデント'],
+                        interviews: [
+                            `${genre}の現状と課題について`,
+                            '著者の実体験に基づく成功事例',
+                            '読者へのメッセージとアドバイス'
+                        ]
+                    },
+                    advertising: {
+                        google: [
+                            `${genre} 本 おすすめ`,
+                            `${keywords[0]} 学習 書籍`,
+                            `ビジネス書 ${genre} 入門`
+                        ],
+                        facebook: {
+                            targeting: '25-50代、ビジネス関心層、管理職',
+                            creative: `${genre}で成果を出したい方必見！実践的ノウハウを凝縮した一冊`
+                        }
+                    },
+                    events: [
+                        {
+                            type: '出版記念セミナー',
+                            format: 'オンライン・オフライン併用',
+                            content: `${genre}の実践方法について90分の講演`
+                        },
+                        {
+                            type: '書店でのサイン会',
+                            locations: ['丸善丸の内本店', '蔦屋書店代官山', 'ジュンク堂池袋本店'],
+                            special: '購入者限定の特典資料配布'
+                        }
+                    ]
+                };
+            }
+
+            generateSNSPosts(platform, genre, keywords) {
+                const postSets = {
+                    x: [
+                        [
+                            `📚新刊「${genre}の極意」発売！\n${keywords.slice(0,3).join('・')}について実践的に解説\n#ビジネス書 #${genre} #新刊`,
+                            `${genre}で成果を出すための3つのポイント:\n1. ${keywords[0]}の理解\n2. ${keywords[1]}の実践\n3. ${keywords[2]}の継続\n詳しくは新刊で！`,
+                            `読者の皆様からの感想をお待ちしています！\n「この本で${genre}への理解が深まった」\nというお声をいただけると嬉しいです📖`
+                        ],
+                        [
+                            `🔥${genre}の本質とは何か？\n多くの人が勘違いしている${keywords[0]}の真実をお話しします\n#${genre} #ビジネス書 #必読`,
+                            `今日のビジネス格言:\n「${keywords[1]}なくして成功なし」\n新刊でこの言葉の真意を詳しく解説しています💡`,
+                            `${genre}を学ぶなら今！\n時代の変化に対応できる${keywords[2]}の力を身につけよう\n#スキルアップ #${genre}`
+                        ]
+                    ],
+                    instagram: [
+                        [
+                            `新刊の執筆風景をストーリーでシェア`,
+                            `${genre}に関する図解投稿シリーズ`,
+                            `読者との質疑応答ライブ配信`
+                        ],
+                        [
+                            `${genre}の成功事例を写真付きで紹介`,
+                            `オフィスでの${keywords[0]}実践風景`,
+                            `読者からの感想投稿をリポスト`
+                        ]
+                    ],
+                    facebook: [
+                        [
+                            `${genre}業界の最新トレンドについての専門記事投稿`,
+                            `業界リーダーとの対談動画シェア`,
+                            `ビジネスケーススタディの紹介`
+                        ],
+                        [
+                            `${keywords[0]}の実践方法について詳細解説`,
+                            `読者限定の${genre}セミナー開催告知`,
+                            `業界の未来予測と${keywords[1]}の重要性`
+                        ]
+                    ]
+                };
+
+                return postSets[platform] || [[]];
+            }
+
+            generateCourseStructure(content, keywords, genre) {
+                const lessons = [];
+                const topics = [
+                    '基礎理解', '概念整理', '実践準備', '導入方法', '基本技術',
+                    '応用技術', '実践演習', '事例研究', '問題解決', '成果測定',
+                    '改善手法', '継続方法', '発展技術', '応用事例', '統合方法',
+                    'チーム活用', '組織導入', '変革推進', '成果最大化', '持続可能性',
+                    '次世代対応', '革新的活用', '戦略統合', '全体最適化', '未来展望',
+                    '実践まとめ', '成功要因', '失敗回避', '継続改善', '総合演習'
+                ];
+
+                for (let i = 0; i < 30; i++) {
+                    lessons.push({
+                        number: i + 1,
+                        title: `${topics[i]}と${keywords[i % keywords.length]}`,
+                        duration: '5分',
+                        objectives: [
+                            `${topics[i]}の理解`,
+                            `${keywords[i % keywords.length]}の習得`,
+                            '実践への応用'
+                        ],
+                        script: {
+                            intro: `こんにちは。第${i + 1}回では${topics[i]}について学びます。`,
+                            main: `${keywords[i % keywords.length]}について詳しく解説します。`,
+                            practice: `実際に${topics[i]}を試してみましょう。`,
+                            closing: `次回は${topics[i + 1] || '総まとめ'}について学びます。`
+                        },
+                        materials: ['講義スライド', 'ワークシート', '参考資料'],
+                        slides: this.generateSlideContent(i + 1, topics[i], keywords[i % keywords.length])
+                    });
+                }
+
+                return {
+                    lessons,
+                    pricing: {
+                        basic: '29,800円（買い切り）',
+                        premium: '49,800円（個別サポート付き）',
+                        corporate: '要相談（企業研修版）'
+                    },
+                    platform: 'Teachable推奨（日本語対応、決済機能充実）',
+                    support: '専用コミュニティ、月1回のオンライン質問会',
+                    certificate: 'コース修了証の発行',
+                    upsell: '上級コース、個別コンサルティング、企業研修'
+                };
+            }
+
+            generateSlideContent(lessonNumber, topic, keyword) {
+                return {
+                    title: `第${lessonNumber}回: ${topic}と${keyword}`,
+                    slides: [
+                        {
+                            type: 'title',
+                            content: `第${lessonNumber}回\n${topic}と${keyword}`,
+                            notes: '導入スライド'
+                        },
+                        {
+                            type: 'agenda',
+                            content: `本日の内容\n1. ${topic}の概要\n2. ${keyword}の重要性\n3. 実践方法\n4. まとめ`,
+                            notes: 'アジェンダ'
+                        },
+                        {
+                            type: 'content',
+                            content: `${topic}とは\n・定義と特徴\n・重要性\n・活用場面`,
+                            notes: '概念説明'
+                        },
+                        {
+                            type: 'practice',
+                            content: `${keyword}の実践\n・具体的手順\n・注意点\n・成功のコツ`,
+                            notes: '実践方法'
+                        },
+                        {
+                            type: 'summary',
+                            content: `まとめ\n・${topic}の重要ポイント\n・${keyword}の活用方法\n・次回予告`,
+                            notes: 'まとめ'
+                        }
+                    ]
+                };
+            }
+
+            generateEmailSequence(content, keywords, genre) {
+                return [
+                    {
+                        number: 1,
+                        title: '【重要】あなたの${genre}の悩み、解決できます',
+                        timing: '登録直後',
+                        purpose: '関係構築・信頼獲得',
+                        subject: '【${genre}で成果を出す】まずはこれを読んでください',
+                        content: `こんにちは。
+
+この度は私の${genre}に関するメールマガジンにご登録いただき、ありがとうございます。
+
+私は${genre}の分野で10年以上の実績を持つ専門家として、多くの方の悩みを解決してきました。
+
+あなたは今、こんな悩みを抱えていませんか？
+
+・${keywords[0]}がうまくいかない
+・${keywords[1]}の正しい方法がわからない
+・${keywords[2]}で成果が出ない
+
+もしそうなら、このメールシリーズがあなたのお役に立てるはずです。
+
+次回のメールでは、多くの人が陥る${genre}の「よくある間違い」についてお話しします。
+
+楽しみにしていてください。
+
+[あなたの名前]`,
+                        cta: '次回メールを楽しみにする',
+                        psychology: '返報性の原理・権威性'
+                    },
+                    {
+                        number: 2,
+                        title: '【警告】この間違いをしていませんか？',
+                        timing: '1日後',
+                        purpose: '問題提起・共感',
+                        subject: '【${genre}】90%の人が知らない致命的な間違い',
+                        content: `こんにちは。
+
+昨日のメールはいかがでしたでしょうか？
+
+今日は、${genre}で成果を出せない人の「共通点」についてお話しします。
+
+実は、${genre}で思うような結果が出ない人の90%は、同じ間違いを犯しています。
+
+それは...
+
+「${keywords[0]}を軽視している」
+
+ことです。
+
+多くの人は${keywords[1]}や${keywords[2]}ばかりに注目しがちですが、実は${keywords[0]}こそが最も重要な要素なのです。
+
+なぜなら...
+
+[具体的な理由を3つほど説明]
+
+このことに気づいたとき、私のクライアントの成果は劇的に改善しました。
+
+例えば、Aさんは...
+[成功事例を紹介]
+
+次回のメールでは、この${keywords[0]}を正しく活用する方法をお伝えします。
+
+楽しみにしていてください。
+
+[あなたの名前]`,
+                        cta: '成功事例をもっと知りたい',
+                        psychology: '恐怖・好奇心・社会的証明'
+                    },
+                    {
+                        number: 3,
+                        title: '【解決策】○○するだけで結果が変わる',
+                        timing: '3日後',
+                        purpose: '解決策提示・権威性',
+                        subject: '【実証済み】${genre}で確実に成果を出す方法',
+                        content: `こんにちは。
+
+前回のメールで、${keywords[0]}の重要性についてお話ししました。
+
+今日は、具体的にどうすれば${keywords[0]}を効果的に活用できるのか、その方法をお伝えします。
+
+実は、私が開発した「${genre}成功メソッド」を使えば、誰でも確実に成果を出すことができます。
+
+このメソッドは、私が10年間で1000人以上のクライアントを指導してきた経験から生まれました。
+
+その方法とは...
+
+[具体的な方法を説明]
+
+このメソッドを実践したクライアントの成果をご覧ください：
+
+・Bさん：3ヶ月で売上が2倍に
+・Cさん：チームの生産性が40%向上
+・Dさん：${keywords[1]}のスキルが飛躍的に向上
+
+実は、このメソッドをより詳しく、体系的に学べるオンラインスクールを開設しました。
+
+詳細は次回のメールでお知らせします。
+
+[あなたの名前]`,
+                        cta: 'オンラインスクールに興味がある',
+                        psychology: '権威性・社会的証明・期待感'
+                    },
+                    {
+                        number: 4,
+                        title: '【限定公開】特別なご案内があります',
+                        timing: '5日後',
+                        purpose: '社会的証明・緊急性',
+                        subject: '【メルマガ読者限定】${genre}マスタースクール特別案内',
+                        content: `こんにちは。
+
+これまでのメールを読んでいただき、ありがとうございました。
+
+今日は、メルマガ読者のあなただけに特別なご案内があります。
+
+私の${genre}に関する知識とノウハウを体系的に学べる
+「${genre}マスタースクール」がついに完成しました。
+
+このスクールでは：
+
+・5分×30レッスンで無理なく学習
+・${keywords[0]}から${keywords[2]}まで完全マスター
+・実践的なワークとフィードバック
+・修了証の発行
+
+これまでの受講生からは、こんな感想をいただいています：
+
+「${genre}への理解が根本的に変わりました」(40代・経営者)
+「実践的な内容で、すぐに成果が出ました」(30代・管理職)
+「投資した金額の10倍の価値がありました」(50代・コンサルタント)
+
+通常価格は49,800円ですが、
+メルマガ読者のあなたには特別価格29,800円でご提供します。
+
+さらに、今回限定で以下の特典をお付けします：
+
+・個別サポート（3ヶ月間）
+・限定コミュニティへの参加権
+・追加教材の無料提供
+
+ただし、この特別価格は明日の24時までの限定です。
+
+詳細とお申込みは次回のメールで。
+
+[あなたの名前]`,
+                        cta: '特別価格で申し込みたい',
+                        psychology: '希少性・限定性・社会的証明'
+                    },
+                    {
+                        number: 5,
+                        title: '【最終案内】あと○時間で終了です',
+                        timing: '6日後',
+                        purpose: '最終オファー・行動促進',
+                        subject: '【残り6時間】${genre}マスタースクール特別価格終了',
+                        content: `こんにちは。
+
+${genre}マスタースクールの特別価格での提供まで、あと6時間となりました。
+
+この機会を逃すと、次回はいつ同じ条件でご提供できるかわかりません。
+
+改めて、このスクールで得られることをお伝えします：
+
+✓ ${genre}の本質的な理解
+✓ ${keywords[0]}の実践的活用法
+✓ ${keywords[1]}で成果を出す秘訣
+✓ ${keywords[2]}を継続する仕組み
+✓ 実際の成功事例とノウハウ
+
+そして、今だけの特典：
+・個別サポート（3ヶ月間）
+・限定コミュニティへの参加権
+・追加教材の無料提供
+
+投資金額：29,800円（通常価格49,800円）
+
+この投資で、あなたの${genre}に関する悩みが解決し、理想的な成果を手に入れることができます。
+
+1日あたりわずか99円の投資で、一生使える${genre}のスキルが身に付きます。
+
+お申込みはこちらから：
+[申込リンク]
+
+最後に、私からあなたへのメッセージです：
+
+成功と失敗の違いは、行動するかしないかだけです。
+
+今この瞬間が、あなたの人生を変えるチャンスです。
+
+一緒に${genre}をマスターしましょう。
+
+[あなたの名前]
+
+P.S. 特別価格での提供は今日の24時で終了します。迷っている時間はありません。今すぐ行動してください。`,
+                        cta: '今すぐ申し込む',
+                        psychology: '緊急性・希少性・行動促進'
+                    }
+                ];
+            }
+
+            async updateProgress(text, progress) {
+                document.getElementById('progressText').textContent = text;
+                document.getElementById('progressFill').style.width = progress + '%';
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            displayResults() {
+                if (!this.analysisResults) return;
+
+                this.displayAnalysisResults();
+                this.displayPromotionStrategy();
+                this.displayCourseStructure();
+                this.displayEmailSequence();
+
+                document.getElementById('resultsSection').classList.remove('hidden');
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            displayAnalysisResults() {
+                const { basic, targetAudience } = this.analysisResults;
+
+                // ターゲット読者
+                const audienceHtml = targetAudience.map(audience => `
+                    <div class="target-card">
+                        <h4 class="font-semibold text-lg text-blue-700 mb-2">${audience.title}</h4>
+                        <p class="text-sm text-gray-600 mb-2">${audience.description}</p>
+                        <div class="space-y-1 text-sm">
+                            <div><strong>属性:</strong> ${audience.demographics}</div>
+                            <div><strong>関心:</strong> ${audience.interests.join(', ')}</div>
+                            <div><strong>利用媒体:</strong> ${audience.channels.join(', ')}</div>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('targetAudience').innerHTML = audienceHtml;
+
+                // ジャンル・キーワード
+                const keywordTags = basic.keywords.map(keyword => 
+                    `<span class="keyword-tag">${keyword}</span>`
+                ).join('');
+                document.getElementById('genreAnalysis').innerHTML = `
+                    <div class="space-y-3">
+                        <div><strong>判定ジャンル:</strong> <span class="text-green-600 font-semibold">${basic.genre}</span></div>
+                        <div><strong>主要キーワード:</strong><br>${keywordTags}</div>
+                        <div><strong>文字数:</strong> 約${basic.wordCount.toLocaleString()}文字</div>
+                    </div>
+                `;
+
+                // 文体・トーン
+                document.getElementById('toneAnalysis').innerHTML = `
+                    <div class="space-y-3">
+                        <div><strong>文体タイプ:</strong> <span class="text-purple-600 font-semibold">${basic.tone.type}</span></div>
+                        <div><strong>特徴:</strong> ${basic.tone.description}</div>
+                        <div><strong>読みやすさ:</strong> ビジネス書として適切なレベル</div>
+                    </div>
+                `;
+            }
+
+            displayPromotionStrategy() {
+                const { promotionStrategy } = this.analysisResults;
+
+                // SNS戦略
+                const snsHtml = `
+                    <div class="space-y-4">
+                        <div class="sns-platform">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-semibold text-lg flex items-center">
+                                    <i class="fab fa-twitter text-blue-500 mr-2"></i>X (Twitter)
+                                </h4>
+                                <button class="btn-primary text-white px-4 py-2 rounded-lg text-sm generate-post-btn" data-platform="x">
+                                    <i class="fas fa-refresh mr-1"></i>投稿内容生成
+                                </button>
+                            </div>
+                            <div class="space-y-2" id="x-posts">
+                                ${promotionStrategy.sns.x[0].map(post => `
+                                    <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-blue-500">
+                                        <div class="whitespace-pre-line">${post}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="sns-platform">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-semibold text-lg flex items-center">
+                                    <i class="fab fa-instagram text-pink-500 mr-2"></i>Instagram
+                                </h4>
+                                <button class="btn-primary text-white px-4 py-2 rounded-lg text-sm generate-post-btn" data-platform="instagram">
+                                    <i class="fas fa-refresh mr-1"></i>投稿内容生成
+                                </button>
+                            </div>
+                            <div class="space-y-2" id="instagram-posts">
+                                ${promotionStrategy.sns.instagram[0].map(post => `
+                                    <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-pink-500">
+                                        <div class="whitespace-pre-line">${post}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="sns-platform">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-semibold text-lg flex items-center">
+                                    <i class="fab fa-facebook text-blue-600 mr-2"></i>Facebook
+                                </h4>
+                                <button class="btn-primary text-white px-4 py-2 rounded-lg text-sm generate-post-btn" data-platform="facebook">
+                                    <i class="fas fa-refresh mr-1"></i>投稿内容生成
+                                </button>
+                            </div>
+                            <div class="space-y-2" id="facebook-posts">
+                                ${promotionStrategy.sns.facebook[0].map(post => `
+                                    <div class="bg-gray-50 p-3 rounded-lg border-l-4 border-blue-600">
+                                        <div class="whitespace-pre-line">${post}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('snsStrategy').innerHTML = snsHtml;
+
+                // 投稿生成ボタンのイベントリスナー
+                document.querySelectorAll('.generate-post-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const platform = e.target.closest('.generate-post-btn').dataset.platform;
+                        this.generateNewSNSPosts(platform);
+                    });
+                });
+
+                // PR戦略
+                document.getElementById('prStrategy').innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">プレスリリース</h4>
+                            <p class="bg-gray-50 p-3 rounded-lg">${promotionStrategy.pr.pressRelease}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">メディアターゲット</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${promotionStrategy.pr.mediaTargets.map(media => `
+                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">${media}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">インタビュー想定テーマ</h4>
+                            <ul class="space-y-1">
+                                ${promotionStrategy.pr.interviews.map(theme => `
+                                    <li class="strategy-item">${theme}</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+
+                // 広告戦略
+                document.getElementById('adStrategy').innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Google広告キーワード</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${promotionStrategy.advertising.google.map(keyword => `
+                                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">${keyword}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Facebook広告</h4>
+                            <div class="bg-gray-50 p-3 rounded-lg space-y-2">
+                                <div><strong>ターゲティング:</strong> ${promotionStrategy.advertising.facebook.targeting}</div>
+                                <div><strong>クリエイティブ:</strong> ${promotionStrategy.advertising.facebook.creative}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // イベント戦略
+                document.getElementById('eventStrategy').innerHTML = `
+                    <div class="space-y-4">
+                        ${promotionStrategy.events.map(event => `
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-lg mb-2">${event.type}</h4>
+                                <div class="space-y-1 text-sm">
+                                    <div><strong>形式:</strong> ${event.format || event.locations?.join(', ') || ''}</div>
+                                    <div><strong>内容:</strong> ${event.content || event.special || ''}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            displayCourseStructure() {
+                const { courseStructure } = this.analysisResults;
+
+                // 30レッスンの詳細カリキュラム
+                const lessonsHtml = courseStructure.lessons.map(lesson => `
+                    <div class="lesson-card">
+                        <div class="module-header">
+                            <div class="text-lg font-semibold text-blue-700">第${lesson.number}回: ${lesson.title}</div>
+                            <div class="duration-badge">${lesson.duration}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h5 class="font-semibold text-sm text-gray-700 mb-2">📋 学習目標</h5>
+                            <ul class="text-sm space-y-1">
+                                ${lesson.objectives.map(obj => `<li class="strategy-item">${obj}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="script-section">
+                            <h5 class="font-semibold text-sm text-blue-700 mb-2">🎬 講座台本</h5>
+                            <div class="space-y-2 text-sm">
+                                <div><strong>導入:</strong> ${lesson.script.intro}</div>
+                                <div><strong>メイン:</strong> ${lesson.script.main}</div>
+                                <div><strong>実践:</strong> ${lesson.script.practice}</div>
+                                <div><strong>まとめ:</strong> ${lesson.script.closing}</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <h5 class="font-semibold text-sm text-gray-700 mb-2">📚 提供資料</h5>
+                            <div class="flex flex-wrap gap-2">
+                                ${lesson.materials.map(material => `
+                                    <span class="timeline-item">${material}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('courseStructure').innerHTML = lessonsHtml;
+
+                // 価格設定・ビジネスモデル
+                document.getElementById('pricingStrategy').innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-3">💰 価格設定</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-gray-50 p-4 rounded-lg text-center">
+                                    <div class="font-semibold text-blue-700">ベーシック</div>
+                                    <div class="text-2xl font-bold text-gray-800">${courseStructure.pricing.basic}</div>
+                                </div>
+                                <div class="bg-blue-50 p-4 rounded-lg text-center border-2 border-blue-500">
+                                    <div class="font-semibold text-blue-700">プレミアム</div>
+                                    <div class="text-2xl font-bold text-blue-800">${courseStructure.pricing.premium}</div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg text-center">
+                                    <div class="font-semibold text-blue-700">法人向け</div>
+                                    <div class="text-2xl font-bold text-gray-800">${courseStructure.pricing.corporate}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">🛠️ 推奨プラットフォーム</h4>
+                            <p class="bg-gray-50 p-3 rounded-lg">${courseStructure.platform}</p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">🤝 サポート体制</h4>
+                            <p class="bg-gray-50 p-3 rounded-lg">${courseStructure.support}</p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">🏆 付加価値</h4>
+                            <ul class="space-y-1">
+                                <li class="strategy-item">${courseStructure.certificate}</li>
+                                <li class="strategy-item">アップセル商品: ${courseStructure.upsell}</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            displayEmailSequence() {
+                const { emailSequence } = this.analysisResults;
+
+                const emailsHtml = emailSequence.map(email => `
+                    <div class="email-card">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-semibold text-lg text-purple-700">
+                                ${email.number}通目: ${email.title}
+                            </h4>
+                            <div class="text-sm text-gray-500">${email.timing}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="text-sm font-semibold text-gray-700 mb-1">目的:</div>
+                            <div class="text-sm text-gray-600">${email.purpose}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="text-sm font-semibold text-gray-700 mb-1">件名:</div>
+                            <div class="bg-gray-50 p-2 rounded text-sm">${email.subject}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="text-sm font-semibold text-gray-700 mb-1">本文:</div>
+                            <div class="bg-gray-50 p-3 rounded text-sm whitespace-pre-line">${email.content}</div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm">
+                            <div>
+                                <span class="font-semibold text-gray-700">CTA:</span>
+                                <span class="text-purple-600">${email.cta}</span>
+                            </div>
+                            <div>
+                                <span class="font-semibold text-gray-700">心理技法:</span>
+                                <span class="text-green-600">${email.psychology}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('emailSequence').innerHTML = emailsHtml;
+            }
+
+            generateNewSNSPosts(platform) {
+                const { promotionStrategy } = this.analysisResults;
+                const posts = promotionStrategy.sns[platform];
+                
+                // 現在のカウントを取得し、次のセットを選択
+                const currentSet = this.snsPostCounts[platform] % posts.length;
+                const nextSet = (currentSet + 1) % posts.length;
+                
+                this.snsPostCounts[platform] = nextSet;
+                
+                const newPosts = posts[nextSet];
+                const platformColors = {
+                    x: 'border-blue-500',
+                    instagram: 'border-pink-500',
+                    facebook: 'border-blue-600'
+                };
+                
+                const postsHtml = newPosts.map(post => `
+                    <div class="bg-gray-50 p-3 rounded-lg border-l-4 ${platformColors[platform]} fade-in">
+                        <div class="whitespace-pre-line">${post}</div>
+                    </div>
+                `).join('');
+                
+                document.getElementById(`${platform}-posts`).innerHTML = postsHtml;
+            }
+
+            switchTab(e) {
+                const tabName = e.target.dataset.tab;
+                
+                // タブの切り替え
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('tab-active');
+                    tab.classList.add('text-gray-600');
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                e.target.classList.add('tab-active');
+                e.target.classList.remove('text-gray-600');
+                document.getElementById(tabName).classList.remove('hidden');
+            }
+
+            downloadResults() {
+                if (!this.analysisResults) return;
+
+                const results = {
+                    timestamp: new Date().toISOString(),
+                    fileName: this.uploadedFile.name,
+                    analysis: this.analysisResults
+                };
+
+                const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `authors_analysis_${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            downloadSlides() {
+                if (!this.analysisResults) return;
+
+                // スライドデータを準備
+                const slideData = {
+                    title: 'オンラインスクール講座スライド',
+                    totalLessons: 30,
+                    lessons: this.analysisResults.courseStructure.lessons.map(lesson => lesson.slides)
+                };
+
+                // JSON形式でダウンロード（実際の実装では PowerPoint 形式に変換）
+                const blob = new Blob([JSON.stringify(slideData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `lecture_slides_${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // 成功メッセージ
+                alert('スライドデータをダウンロードしました！\n実際の実装では PowerPoint 形式で提供されます。');
+            }
+        }
+
+        // アプリケーション初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            new AuthorsAnalyzer();
+        });
+    </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"960802ee9954c69e","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2025.7.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"></script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDmq%2B2oUUYGgWYw66BUzWxblkgC4t2NSPl3vMjCxgo%2BAi7ZK4PqpG4e9h5VKmidFNtJ%2Beh3G7L0LrdQp4tXDtNulO3ebi3jAbLthODsAMbOSuoJDIefTWFe9IBtWapewIQdaT9MhHHj1rXyrs1LMCN%2BCiRV1LZbCMH%2Fhs3DcBmE1DHt7i%2BObcnX58vo1hnmWHLEV5mFwAnkFG0Inzsgs%2B%2BpBp8G8IJ2gwviY5I2%2B9VX2xld5djeTIDuqdAu2p20NFJXoyoHkApvvln%2FTyvVOoqWotVFPEsmnJZgSZ%2F6vmBbefJFs0RZWRikCBzRKqDLjnLkrUfQcQGAPr4oE76XAbk5P3uts9p%2BowXMrR8wdhuZkqTg5dYrrIXf%2FHbEB%2B8puOFgbDSFGCeWEnqda2ensDe2Z5nMcNeXFlb%2FTKIZMQ7OxwJ4UqWKFk2mU5dWeAhaorW9XlmJLEQWW9qJMrE%2BS2QG0sun37mAEq3ysKaAq3E21EZSYEh0JKMo20TX4AE9Z2%2Fg%3D%3D";
+        window.__genspark_locale = "ja-JP";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDmq+2oUUYGgWYw66BUzWxblkgC4t2NSPl3vMjCxgo+Ai7ZK4PqpG4e9h5VKmidFNtJ+eh3G7L0LrdQp4tXDtNulO3ebi3jAbLthODsAMbOSuoJDIefTWFe9IBtWapewIQdaT9MhHHj1rXyrs1LMCN+CiRV1LZbCMH/hs3DcBmE1DHt7i+ObcnX58vo1hnmWHLEV5mFwAnkFG0Inzsgs++pBp8G8IJ2gwviY5I2+9VX2xld5djeTIDuqdAu2p20NFJXoyoHkApvvln/TyvVOoqWotVFPEsmnJZgSZ/6vmBbefJFs0RZWRikCBzRKqDLjnLkrUfQcQGAPr4oE76XAbk5P3uts9p+owXMrR8wdhuZkqTg5dYrrIXf/HbEB+8puOFgbDSFGCeWEnqda2ensDe2Z5nMcNeXFlb/TKIZMQ7OxwJ4UqWKFk2mU5dWeAhaorW9XlmJLEQWW9qJMrE+S2QG0sun37mAEq3ysKaAq3E21EZSYEh0JKMo20TX4AE9Z2/g==";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    
